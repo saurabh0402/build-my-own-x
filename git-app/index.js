@@ -32,7 +32,8 @@ const handler = async (event) => {
 
   try {
     const commentUrl = body.issue.comments_url;
-    let res = await addComment(commentUrl, gifUrl, keyword);
+    const installationId = body.installation.id;
+    let res = await addComment(installationId, commentUrl, gifUrl, keyword);
     res = await res.json();
 
     console.log(res);

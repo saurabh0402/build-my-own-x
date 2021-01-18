@@ -1,7 +1,9 @@
 const fetch = require('node-fetch');
+const fs = require('fs');
+const jwt = require('jsonwebtoken');
 
 const giphyKey = process.env.GIPHY_API_KEY;
-const gitToken = process.env.GITHUB_ACCESS_TOKEN;
+const appId = process.env.APP_ID;
 
 const getKeyword = (commentBody) => {
   const format = /\[giffy:(.+?)\]/g;
@@ -35,8 +37,37 @@ const getGifForKeyword = async (keyword) => {
   return gifRes.data[0].images.fixed_height.url;
 };
 
-const addComment = (url, gifUrl, keyword) => {
+const getToken = async (installationId) => {
+  const cert = fs.readFileSync('pkey.pem');
+  const jwtSigned = jwt.sign(
+    {
+      iss: appId,
+    },
+    cert,
+    {
+      algorithm: 'RS256',
+      expiresIn: '10m',
+    }
+  );
+
+  let tokenRes = await fetch(
+    `https://api.github.com/app/installations/${installationId}/access_tokens`,
+    {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${jwtSigned}`,
+      },
+    }
+  );
+
+  tokenRes = await tokenRes.json();
+  return tokenRes.token;
+};
+
+const addComment = async (installationId, url, gifUrl, keyword) => {
   const comment = `![Gif for ${keyword}](${gifUrl})`;
+  const accessToken = await getToken(installationId);
   return fetch(url, {
     method: 'post',
     body: JSON.stringify({
@@ -44,7 +75,7 @@ const addComment = (url, gifUrl, keyword) => {
     }),
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `token ${gitToken}`,
+      Authorization: `token ${accessToken}`,
     },
   });
 };
@@ -53,4 +84,5 @@ module.exports = {
   getKeyword,
   getGifForKeyword,
   addComment,
+  getToken,
 };
