@@ -6,6 +6,7 @@ const handler = async (event) => {
   if (!body || body.action !== 'created' || !body.comment) {
     console.log('Not Comment Creation, Halting execution.');
     return {
+      statusCode: 200,
       message: 'Not a comment.',
     };
   }
@@ -17,6 +18,7 @@ const handler = async (event) => {
   } catch (err) {
     console.log('Halting execution, no keyword found.', err);
     return {
+      statusCode: 200,
       message: 'No keyword found.',
     };
   }
@@ -26,6 +28,7 @@ const handler = async (event) => {
   } catch (err) {
     console.log('Error in fetching GIF.', err);
     return {
+      statusCode: 200,
       message: 'Error in fetching GIF.',
     };
   }
@@ -33,10 +36,8 @@ const handler = async (event) => {
   try {
     const commentUrl = body.issue.comments_url;
     const installationId = body.installation.id;
-    let res = await addComment(installationId, commentUrl, gifUrl, keyword);
-    res = await res.json();
+    await addComment(installationId, commentUrl, gifUrl, keyword);
 
-    console.log(res);
     return {
       statusCode: 200,
       body: JSON.stringify({
@@ -46,6 +47,7 @@ const handler = async (event) => {
   } catch (err) {
     console.log('Failed to add comment', err);
     return {
+      statusCode: 200,
       message: 'Comment addition failed 😢',
     };
   }
