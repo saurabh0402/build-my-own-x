@@ -25,8 +25,8 @@ const getGifForKeyword = async (keyword) => {
   const url = 'http://api.giphy.com/v1/gifs/search?';
   const urlParams = new URLSearchParams({
     api_key: giphyKey,
-    q: keyword,
-    limit: 1,
+    q: keyword.toLowerCase(),
+    limit: 50,
     rating: 'g',
     lang: 'en',
   });
@@ -34,7 +34,13 @@ const getGifForKeyword = async (keyword) => {
   let gifRes = await fetch(url + urlParams);
   gifRes = await gifRes.json();
 
-  return gifRes.data[0].images.fixed_height.url;
+  if (!gifRes || !gifRes.data || !gifRes.data.length) {
+    throw new Error('No GIF found 😏');
+  }
+
+  const theSelectedOne =
+    gifRes.data[Math.floor(Math.random() * gifRes.data.length)];
+  return theSelectedOne.images.fixed_height.url;
 };
 
 const getToken = async (installationId) => {
