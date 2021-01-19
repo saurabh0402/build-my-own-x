@@ -1,6 +1,6 @@
 const fetch = require('node-fetch');
-const fs = require('fs');
 const jwt = require('jsonwebtoken');
+const { readFileSync } = require('fs');
 
 const giphyKey = process.env.GIPHY_API_KEY;
 const appId = process.env.APP_ID;
@@ -38,7 +38,7 @@ const getGifForKeyword = async (keyword) => {
 };
 
 const getToken = async (installationId) => {
-  const cert = fs.readFileSync('pkey.pem');
+  const cert = readFileSync('pkey.pem');
   const jwtSigned = jwt.sign(
     {
       iss: appId,
@@ -68,6 +68,7 @@ const getToken = async (installationId) => {
 const addComment = async (installationId, url, gifUrl, keyword) => {
   const comment = `![Gif for ${keyword}](${gifUrl})`;
   const accessToken = await getToken(installationId);
+
   return fetch(url, {
     method: 'post',
     body: JSON.stringify({
