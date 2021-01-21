@@ -1,5 +1,5 @@
 # Gitty 🐱
-## What is Giffy? 🤔
+## What is Gitty? 🤔
 Continuing with the trend of having un-inspirational names, here's **Gitty**, a command-line tool, written in Golang, that allows you to visualize you Git contributions for repositories you have on your system.
 
 ## Ideas 💡

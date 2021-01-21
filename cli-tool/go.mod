@@ -1,3 +1,3 @@
-module giffy
+module gitty
 
 go 1.14
