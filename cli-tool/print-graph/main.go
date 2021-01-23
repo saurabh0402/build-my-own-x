@@ -60,12 +60,24 @@ func printGrid(commitsByDay map[int][]int) {
 		commits := commitsByDay[day]
 		length := len(commits)
 
-		fmt.Printf("%12s", dayMapper[day])
+		fmt.Printf("%12s ", dayMapper[day])
 		for j := length - 1; j >= 0; j-- {
 			if commits[j] == -1 {
-				fmt.Printf("%4s", "")
+				fmt.Printf("%4s ", "")
 			} else {
-				fmt.Printf("%4d", commits[j])
+				escape := ""
+				val := commits[j]
+
+				switch {
+				case val > 0 && val < 5:
+					escape = "\033[1;30;47m"
+				case val >= 5 && val < 10:
+					escape = "\033[1;30;43m"
+				case val >= 10:
+					escape = "\033[1;30;42m"
+				}
+
+				fmt.Printf(escape+"%4d \033[0m", val)
 			}
 		}
 		fmt.Print("\n")
