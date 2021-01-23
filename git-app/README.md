@@ -1,4 +1,4 @@
-# Giffy 🎉
+# Giffy 🧙‍♂️
 ## What is Giffy? 🤔
 A simple Git App that comments with a gif when invoked. To invoke simple write `[giffy:keyword]` in the comment and in a few seconds the bot will respond with a gif for the given `keyword`. Internally it uses [Giphy API](https://developers.giphy.com/docs/api/endpoint) to fetch the gif (Even the name is a derivative of theirs 😉). 
 
