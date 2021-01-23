@@ -11,8 +11,8 @@ A simple Git App that comments with a gif when invoked. To invoke simple write `
 ### Deploying the service 🚀
 This uses `serverless` to deploy the single endpoint on an AWS Lambda. Simply run the following commands after moving into this directory and copy the URL generated after success.
 ```
-  yarn install
-  npx sls deploy
+yarn install
+npx sls deploy
 ```
 
 ### Setting up GitHub Apps 🚀
