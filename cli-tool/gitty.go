@@ -4,6 +4,7 @@ import (
 	"fileparser"
 	"finder"
 	"flag"
+	"githelper"
 	"log"
 )
 
@@ -13,7 +14,10 @@ func scan(folder string) {
 	fileparser.AddNewReposToFile(gitRepos, dotFilePath)
 }
 
-func stats(email string) {}
+func stats(email string) {
+	commits := githelper.GetCommits(email)
+	log.Print(commits)
+}
 
 func main() {
 	var folder string

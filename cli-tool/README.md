@@ -1,6 +1,6 @@
 # Gitty 🐱
 ## What is Gitty? 🤔
-Continuing with the trend of having un-inspirational names, here's **Gitty**, a command-line tool, written in Golang, that allows you to visualize you Git contributions for repositories you have on your system.
+Continuing with the trend of having un-inspirational names, here's **Gitty**, a command-line tool, written in Golang, that allows you to visualize you Git contributions for repositories you have on your system (Drum rolls please 🥁 🥁) on your terminal.
 
 ## Ideas 💡
 I will be following the tutorial first and get a simple version of the tool ready. After that there are a few ideas that I would like to visit:

@@ -28,24 +28,6 @@ func openFile(filePath string) *os.File {
 	return fd
 }
 
-func readStoredFile(filePath string) []string {
-	fd := openFile(filePath)
-	defer fd.Close()
-
-	ans := []string{}
-	fileScanner := bufio.NewScanner(fd)
-
-	for fileScanner.Scan() {
-		ans = append(ans, fileScanner.Text())
-	}
-
-	if err := fileScanner.Err(); err != nil {
-		log.Fatal(err)
-	}
-
-	return ans
-}
-
 func mergeReposList(list1 []string, list2 []string) []string {
 	for _, t := range list2 {
 		if !isPresentInSlice(list1, t) {
@@ -75,9 +57,32 @@ func writeSliceToStore(slice []string, filePath string) {
 	}
 }
 
+// --------------------
+// Exports
+// --------------------
+
+// ReadStoredFile reads lines from store file and returns an array of strings
+func ReadStoredFile(filePath string) []string {
+	fd := openFile(filePath)
+	defer fd.Close()
+
+	ans := []string{}
+	fileScanner := bufio.NewScanner(fd)
+
+	for fileScanner.Scan() {
+		ans = append(ans, fileScanner.Text())
+	}
+
+	if err := fileScanner.Err(); err != nil {
+		log.Fatal(err)
+	}
+
+	return ans
+}
+
 // AddNewReposToFile checks the store file and adds any new repos to it
 func AddNewReposToFile(repos []string, filePath string) {
-	existingRepos := readStoredFile(filePath)
+	existingRepos := ReadStoredFile(filePath)
 	newReposList := mergeReposList(existingRepos, repos)
 	writeSliceToStore(newReposList, filePath)
 }
