@@ -15,8 +15,7 @@ func scan(folder string) {
 	fileparser.AddNewReposToFile(gitRepos, dotFilePath)
 }
 
-func stats(email string) {
-	numDays := 31
+func stats(email string, numDays int) {
 	commits := githelper.GetCommits(email, numDays)
 	printgraph.PrintGraph(commits, numDays)
 }
@@ -24,9 +23,11 @@ func stats(email string) {
 func main() {
 	var folder string
 	var email string
+	var numDays int
 
 	flag.StringVar(&folder, "add", "", "Add a new folder to scan for Git Repositories")
 	flag.StringVar(&email, "email", "", "The email to check for contributions")
+	flag.IntVar(&numDays, "numDays", 31, "Number of days of contributions to fetch")
 
 	flag.Parse()
 
@@ -36,7 +37,7 @@ func main() {
 	}
 
 	if email != "" {
-		stats(email)
+		stats(email, numDays)
 		return
 	}
 
