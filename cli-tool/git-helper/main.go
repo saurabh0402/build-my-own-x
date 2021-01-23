@@ -20,7 +20,7 @@ func numDaysFromToday(date time.Time) int {
 	return diff
 }
 
-func addCommits(path string, email string, commitCounts map[int]int) map[int]int {
+func addCommits(path string, email string, commitCounts map[int]int, numDays int) map[int]int {
 	repo, err := git.PlainOpen(path)
 	if err != nil {
 		log.Fatal(err)
@@ -43,7 +43,7 @@ func addCommits(path string, email string, commitCounts map[int]int) map[int]int
 
 		diff := numDaysFromToday(c.Author.When)
 
-		if diff > 10 {
+		if diff > numDays {
 			return nil
 		}
 
@@ -54,23 +54,21 @@ func addCommits(path string, email string, commitCounts map[int]int) map[int]int
 		log.Fatal(err)
 	}
 
-	log.Print(email)
 	return commitCounts
 }
 
 // GetCommits returns the number of commits for last few days
-func GetCommits(email string) map[int]int {
+func GetCommits(email string, numDays int) map[int]int {
 	dotFilePath := finder.GetDotFilePath()
 	repos := fileparser.ReadStoredFile(dotFilePath)
-	numsDays := 10
 
 	commitCounts := make(map[int]int)
-	for i := numsDays; i > 0; i-- {
+	for i := numDays; i > 0; i-- {
 		commitCounts[i] = 0
 	}
 
 	for _, repo := range repos {
-		commitCounts = addCommits(repo, email, commitCounts)
+		commitCounts = addCommits(repo, email, commitCounts, numDays)
 	}
 
 	return commitCounts

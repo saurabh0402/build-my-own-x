@@ -6,6 +6,7 @@ import (
 	"flag"
 	"githelper"
 	"log"
+	"printgraph"
 )
 
 func scan(folder string) {
@@ -15,8 +16,9 @@ func scan(folder string) {
 }
 
 func stats(email string) {
-	commits := githelper.GetCommits(email)
-	log.Print(commits)
+	numDays := 31
+	commits := githelper.GetCommits(email, numDays)
+	printgraph.PrintGraph(commits, numDays)
 }
 
 func main() {
