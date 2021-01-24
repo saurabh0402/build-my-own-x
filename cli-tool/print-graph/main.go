@@ -2,7 +2,6 @@ package printgraph
 
 import (
 	"fmt"
-	"math"
 	"time"
 )
 
@@ -17,28 +16,16 @@ func getCommitsByDay(commits map[int]int, numDays int) map[int][]int {
 		"Saturday":  6,
 	}
 
+	startDay := dayMapper[time.Now().AddDate(0, 0, -numDays).Weekday().String()]
 	commitsByDay := make(map[int][]int)
 
-	totalWeeks := int(math.Ceil(float64(numDays) / 7))
-	for i := 0; i < 7; i++ {
-		commitsByDay[i] = []int{}
-		for j := 0; j < totalWeeks; j++ {
-			commitsByDay[i] = append(commitsByDay[i], -1)
-		}
+	for i := 0; i < startDay; i++ {
+		commitsByDay[i] = append(commitsByDay[i], -1)
 	}
 
-	todaysDay := dayMapper[time.Now().Weekday().String()]
-
-	for day := 0; day <= numDays; day++ {
-		index := day%7 - todaysDay
-		value := commits[day]
-		week := int(math.Floor(float64(day) / 7))
-
-		if index < 0 {
-			index = -index
-		}
-
-		commitsByDay[index][week] = value
+	for i := numDays; i >= 0; i-- {
+		index := ((numDays - i) + startDay) % 7
+		commitsByDay[index] = append(commitsByDay[index], commits[i])
 	}
 
 	return commitsByDay
@@ -61,7 +48,7 @@ func printGrid(commitsByDay map[int][]int) {
 		length := len(commits)
 
 		fmt.Printf("%12s ", dayMapper[day])
-		for j := length - 1; j >= 0; j-- {
+		for j := 0; j < length; j++ {
 			if commits[j] == -1 {
 				fmt.Printf("%4s ", "")
 			} else {
