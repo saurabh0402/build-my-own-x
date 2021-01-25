@@ -67,7 +67,7 @@ And now comes the last step - Bundling the code. One thing that is to be kept in
 - Finally, we create an IIFE that takes the object created in the first step. We declare a `globalRequire` function that takes the `id` of a module, runs its code, and returns whatever it exports.
 
   Now, for running the code is uses the function that was defined in first step for each module. But the code has relative addresses in their `require` statements so how is that handled 🤔  This is where `require` comes in handy. Note that the function that wraps a module's code expects three arguments - `require`, `module`, and `exports`. What we do is that we pass in our `localRequire` function - which takes in an address, gets module id for it, and passes it to the `globalRequire` which runs the function and returns the exported value.
-  
+
   I know this is a bit complicated to get the head around but all that you really need to understand is this function:
   ```js
   function globalRequire(id) {
@@ -116,7 +116,7 @@ for (const index in arr) {
 ## Further Steps 🚶
 - Currently we need to add `.js` to filenames, let's remove that.
 - Try some other parses like - [acorn](https://github.com/acornjs/acorn) and maybe have an option to choose parser.
-- Add missing functionalities - parsing each module just once, caching, circular dependency, etc.
+- Add missing functionalities - caching, circular dependency, etc.
 - Config file support.
 
 ## Credits 🏆

@@ -1,3 +1,5 @@
+import msgs from './messages.js';
+
 export default function () {
-  console.log('Hello World!');
+  console.log(msgs[0]);
 }

@@ -48,6 +48,9 @@ function generateGraph(entry) {
   const mainAssets = findDependency(absEntryPath);
 
   const graph = [mainAssets];
+  const pathIdMapper = {
+    [absEntryPath]: mainAssets.id,
+  };
 
   const entryDirName = path.dirname(absEntryPath);
   for (const asset of graph) {
@@ -56,10 +59,14 @@ function generateGraph(entry) {
 
     asset.dependencies.forEach((childPath) => {
       const absPath = path.join(entryDirName, childPath);
-      const childDependencies = findDependency(absPath);
-      graph.push(childDependencies);
-
-      asset.mapping[childPath] = childDependencies.id;
+      if (!pathIdMapper[absPath]) {
+        const childDependencies = findDependency(absPath);
+        graph.push(childDependencies);
+        asset.mapping[childPath] = childDependencies.id;
+        pathIdMapper[absPath] = childDependencies.id;
+      } else {
+        asset.mapping[childPath] = pathIdMapper[absPath];
+      }
     });
   }
 
