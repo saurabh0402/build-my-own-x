@@ -1,0 +1,16 @@
+{
+  "name": "module-bundler",
+  "version": "0.0.1",
+  "description": "Bundly is a simple JavaScript module bundler.",
+  "main": "bundly.js",
+  "scripts": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/core": "^7.12.10",
+    "@babel/parser": "^7.12.11",
+    "@babel/preset-env": "^7.12.11",
+    "@babel/traverse": "^7.12.12"
+  }
+}
