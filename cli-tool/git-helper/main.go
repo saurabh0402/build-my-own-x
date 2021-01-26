@@ -58,8 +58,8 @@ func addCommits(path string, email string, commitCounts map[int]int, numDays int
 }
 
 // GetCommits returns the number of commits for last few days
-func GetCommits(email string, numDays int) map[int]int {
-	dotFilePath := finder.GetDotFilePath()
+func GetCommits(email string, numDays int, ns string) map[int]int {
+	dotFilePath := finder.GetDotFilePath(ns)
 	repos := fileparser.ReadStoredFile(dotFilePath)
 
 	commitCounts := make(map[int]int)
