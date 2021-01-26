@@ -48,11 +48,28 @@ func FindGitRepos(folder string) []string {
 }
 
 // GetDotFilePath return the path to the store file
-func GetDotFilePath() string {
+func GetDotFilePath(ns string) string {
 	usr, err := user.Current()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	return usr.HomeDir + "/.gittystore"
+	return usr.HomeDir + "/.gitty/" + ns + "/.gittystore"
+}
+
+// InitNamespace creates required folders for a given namespace
+func InitNamespace(ns string) {
+	usr, err := user.Current()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	gittyStore := usr.HomeDir + "/.gitty"
+	pathToCreate := gittyStore + "/" + ns
+
+	err = os.MkdirAll(pathToCreate, 0777)
+
+	if err != nil {
+		log.Fatal("Unable to initialise namespace")
+	}
 }
