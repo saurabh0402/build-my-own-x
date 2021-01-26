@@ -4,6 +4,39 @@ const parser = require('@babel/parser');
 const { default: traverse } = require('@babel/traverse');
 const { transformFromAstSync } = require('@babel/core');
 
+const CONFIG_FILE = 'bundly.config.json';
+const DEFAULT_CONFIG = {
+  entry: 'index.js',
+  output: {
+    path: '.',
+    filename: 'bundle.js',
+    autoCreateFolder: false,
+  },
+};
+
+function mergeConfig(oldConfig, newConfig) {
+  return {
+    ...oldConfig,
+    ...newConfig,
+    output: {
+      ...(oldConfig.output || {}),
+      ...(newConfig.output || {}),
+    },
+  };
+}
+
+function createOutputPath(opPath) {
+  const splitPath = opPath.split('/');
+  let curPath = '';
+
+  splitPath.forEach((p) => {
+    curPath += `${p}/`;
+    if (!fs.existsSync(curPath)) {
+      fs.mkdirSync(curPath);
+    }
+  });
+}
+
 function generateId() {
   const ID_LEN = 20;
   const ALLOWED_CHARS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -118,8 +151,32 @@ function bundle(graph, entry) {
 
 (() => {
   if (require.main !== 'module') {
-    const { graph, entry } = generateGraph('./example/index.js');
+    const configExists = fs.existsSync(CONFIG_FILE);
+    let config = DEFAULT_CONFIG;
+
+    if (configExists) {
+      try {
+        const fileConfig = JSON.parse(fs.readFileSync(CONFIG_FILE));
+        config = mergeConfig(config, fileConfig);
+      } catch (err) {
+        console.error('Invalid config file.');
+        process.exit(1);
+      }
+    }
+
+    if (!fs.existsSync(config.output.path)) {
+      try {
+        createOutputPath(config.output.path);
+      } catch (err) {
+        console.error('Unable to create bundle destination.');
+        process.exit(1);
+      }
+    }
+
+    const outputPath = path.join(config.output.path, config.output.filename);
+
+    const { graph, entry } = generateGraph(config.entry);
     const bundleString = bundle(graph, entry);
-    fs.writeFileSync('bundle.js', bundleString);
+    fs.writeFileSync(outputPath, bundleString);
   }
 })();

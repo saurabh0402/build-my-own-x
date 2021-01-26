@@ -117,7 +117,6 @@ for (const index in arr) {
 - Currently we need to add `.js` to filenames, let's remove that.
 - Try some other parses like - [acorn](https://github.com/acornjs/acorn) and maybe have an option to choose parser.
 - Add missing functionalities - caching, circular dependency, etc.
-- Config file support.
 
 ## Credits 🏆
 ***All Credits to [https://github.com/ronami/minipack](https://github.com/ronami/minipack)***
