@@ -2,7 +2,7 @@
   "name": "module-bundler",
   "version": "0.0.1",
   "description": "Bundly is a simple JavaScript module bundler.",
-  "main": "bundly.js",
+  "main": "bundly/index.js",
   "scripts": {},
   "keywords": [],
   "author": "",
