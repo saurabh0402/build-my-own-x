@@ -1,4 +1,5 @@
 let nextUnitOfWork = null;
+let wipRoot = null;
 
 // To make texts consistent with everything else, every text is converted to to an object as well
 function createTextElement(text) {
@@ -42,12 +43,30 @@ function createDom(fiber) {
 
 // The render function, this starts the renedering by setting nextUnitOfWork
 function render(elem, container) {
-  nextUnitOfWork = {
+  wipRoot = nextUnitOfWork = {
     dom: container,
     props: {
       children: [elem],
     },
   };
+
+  nextUnitOfWork = wipRoot;
+}
+
+function commitRoot() {
+  commitWork(wipRoot.child);
+  wipRoot = null;
+}
+
+function commitWork(fiber) {
+  if (!fiber) {
+    return;
+  }
+
+  fiber.parent.dom.appendChild(fiber.dom);
+
+  commitWork(fiber.child);
+  commitWork(fiber.sibling);
 }
 
 // An infinite loop is created here which is called br browser whenever it is free
@@ -57,6 +76,11 @@ function workLoop(deadline) {
 
   while (nextUnitOfWork && !shouldYield) {
     nextUnitOfWork = performUnitWork(nextUnitOfWork);
+    shouldYield = deadline.timeRemaining() < 1;
+  }
+
+  if (!nextUnitOfWork && wipRoot) {
+    commitRoot();
   }
 
   requestIdleCallback(workLoop);
@@ -67,10 +91,6 @@ function workLoop(deadline) {
 function performUnitWork(fiber) {
   if (!fiber.dom) {
     fiber.dom = createDom(fiber);
-  }
-
-  if (fiber.parent) {
-    fiber.parent.dom.appendChild(fiber.dom);
   }
 
   let children = fiber.props.children;
