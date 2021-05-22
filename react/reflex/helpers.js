@@ -14,9 +14,14 @@ function isDeleted(prop, props) {
   return !(prop in props);
 }
 
+function isFunctionalComponent(fiber) {
+  return fiber.type instanceof Function;
+}
+
 module.exports = {
   isEvent,
   isProperty,
   getEventName,
   isDeleted,
+  isFunctionalComponent,
 };

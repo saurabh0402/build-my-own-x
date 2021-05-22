@@ -15,6 +15,7 @@
 */
 
 const { createDom } = require('./creator');
+const { isFunctionalComponent } = require('./helpers');
 
 function render(elem, root) {
   global.wipRoot = {
@@ -28,12 +29,25 @@ function render(elem, root) {
   global.nextUnitOfWork = global.wipRoot;
 }
 
-function performUnitWork(fiber) {
+function reconcileFunctionalComponent(fiber) {
+  const children = [fiber.type(fiber.props)];
+  reconcileChildren(fiber, children);
+}
+
+function reconcileHtmlComponent(fiber) {
   if (!fiber.dom) {
     fiber.dom = createDom(fiber);
   }
 
-  reconcileChildren(fiber);
+  reconcileChildren(fiber, fiber.props.children);
+}
+
+function performUnitWork(fiber) {
+  if (isFunctionalComponent(fiber)) {
+    reconcileFunctionalComponent(fiber);
+  } else {
+    reconcileHtmlComponent(fiber);
+  }
 
   if (fiber.child) {
     return fiber.child;
@@ -55,10 +69,9 @@ function performUnitWork(fiber) {
   This function compares the last rendered Fiber tree to the one we are creating now.
   Depending on that it decides what it wants to do with a node - update, create or delete
 */
-function reconcileChildren(fiber) {
+function reconcileChildren(fiber, children) {
   let i = 0;
   let oldFiber = fiber.alternate?.child;
-  let children = fiber.props.children;
   let prevSibling = null;
 
   while (i < children.length || oldFiber) {

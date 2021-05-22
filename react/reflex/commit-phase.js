@@ -8,16 +8,30 @@ function commitRoot() {
   global.wipRoot = null;
 }
 
+function commitDeletion(domParent, fiber) {
+  while (!fiber.dom) {
+    fiber = fiber.child;
+  }
+
+  domParent.removeChild(fiber.dom);
+}
+
 function commitWork(fiber) {
   if (!fiber) {
     return;
   }
 
-  const domParent = fiber.parent.dom;
-  if (fiber.effectTag === 'PLACEMENT') {
+  let parent = fiber.parent;
+  while (!parent.dom) {
+    parent = parent.parent;
+  }
+
+  const domParent = parent.dom;
+
+  if (fiber.effectTag === 'PLACEMENT' && fiber.dom) {
     domParent.appendChild(fiber.dom);
-  } else if (fiber.effectTag === 'DELETION') {
-    domParent.removeChild(fiber.dom);
+  } else if (fiber.effectTag === 'DELETION' && fiber.dom) {
+    commitDeletion(domParent, fiber);
   } else if (fiber.effectTag === 'UPDATE') {
     updateDom(fiber);
   }
