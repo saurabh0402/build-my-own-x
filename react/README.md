@@ -51,5 +51,20 @@ Before you begin diving into the code, here are a few things that will help you 
 
   One other thing to remember when you look at the code is that this tree is actually created on the fly while rendering.
 
+## Working 🏗️
+- Our simple react works in two phases:
+  - Render
+    - This phase creates the Fiber tree. During this phase we create the DOM representation of every node along with the state setup when needed.
+  - Commit
+    - The fiber tree created in Render phase it finallt commited to the DOM in this phase. This is when we make the required changes to DOM.
+- There's a work loop that is infinitely running whenever the browser is idle using `requestIdleCallback`. This will perform work only when needed.
+- Commit phase will always be triggered after the render phase. And initially render phase is triggered when we called `render` function. After that, render phase is triggered from the `setState` function that `useState` returns.
+- The render phase is triggered simply by setting the global variable `nextUnitOfWork` and commit phase is triggered when `nextUnitOfWork` is null and `wipRoot` is set.
+- A simple flow of the `reflex` will follow these steps:
+  - When `render` is called, it sets `wipRoot` and `nextUnitOfWork` variables.
+  - This triggers the `render` phase. We create the fiber tree. Remember that this includes comparing the tree with the previous tree and assigning to each node a `effectTag` which represents whether the node was deleted, updated, or added.
+  - Once the complete tree is created, `nextUnitOfWork` is set to null which in turn triggers `commit` phase.
+  - Commit phase simply takes the nodes and commits them to DOM in a single loop without any break.
+
 ## Credits 🏆
 ***All Credits to [https://pomb.us/build-your-own-react/](https://pomb.us/build-your-own-react/)***

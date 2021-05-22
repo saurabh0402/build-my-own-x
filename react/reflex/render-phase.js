@@ -29,9 +29,41 @@ function render(elem, root) {
   global.nextUnitOfWork = global.wipRoot;
 }
 
+let wipFiber = null;
+let hookIndex = 0;
+
 function reconcileFunctionalComponent(fiber) {
+  wipFiber = fiber;
+  hookIndex = 0;
+  wipFiber.hooks = [];
+
   const children = [fiber.type(fiber.props)];
   reconcileChildren(fiber, children);
+}
+
+function useState(initial) {
+  const oldHook = wipFiber.alternate?.hooks?.[hookIndex];
+  const hook = {
+    state: oldHook ? oldHook.state : initial,
+    queue: [],
+  };
+
+  (oldHook?.queue || []).forEach((action) => (hook.state = action(hook.state)));
+
+  function setState(action) {
+    hook.queue.push(action);
+    global.wipRoot = {
+      dom: currentRoot.dom,
+      props: currentRoot.props,
+      alternate: currentRoot,
+    };
+
+    global.nextUnitOfWork = wipRoot;
+  }
+
+  wipFiber.hooks.push(hook);
+  ++hookIndex;
+  return [hook.state, setState];
 }
 
 function reconcileHtmlComponent(fiber) {
@@ -124,4 +156,5 @@ function reconcileChildren(fiber, children) {
 module.exports = {
   render,
   performUnitWork,
+  useState,
 };

@@ -1,6 +1,6 @@
 const { createElement, createDom } = require('./creator');
 const { isEvent, isProperty } = require('./helpers');
-const { render, performUnitWork } = require('./render-phase');
+const { render, performUnitWork, useState } = require('./render-phase');
 const { commitRoot } = require('./commit-phase');
 
 // The next fiber to be processed
@@ -38,4 +38,5 @@ requestIdleCallback(workLoop);
 module.exports = {
   createElement,
   render,
+  useState,
 };
