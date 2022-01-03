@@ -5,3 +5,4 @@ This repository will contain my codes as I try to create at least a few things f
 - [Git App](./git-app): Giffy, the Git Bot, comments back with a Gif whenever invoked. 🧙
 - [Module Bundler](./module-bundler): Bundly, a simple, tiny JavaScript Module Bundler. 📦
 - [React](./react): Reflex, a simple react clone. 💃
+- [Modash](./modash): Modash, a simple implementation of Lodash functions. 🐮

@@ -1,0 +1,13 @@
+{
+  "name": "modash",
+  "version": "1.0.0",
+  "main": "./src/index.js",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "test": "mocha --recursive"
+  },
+  "devDependencies": {
+    "mocha": "^9.1.3"
+  }
+}
