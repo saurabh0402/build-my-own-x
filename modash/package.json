@@ -5,9 +5,11 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "test": "mocha --recursive"
+    "test": "mocha --recursive",
+    "doc": "jsdoc2md src/*/*.js > docs.md"
   },
   "devDependencies": {
+    "jsdoc-to-markdown": "^7.1.0",
     "mocha": "^9.1.3"
   }
 }
