@@ -1,8 +1,0 @@
-{
-  "entry": "./example/index.js",
-  "output": {
-    "path": "./build",
-    "filename": "bundle.js",
-    "autoCreateFolder": true
-  }
-}
